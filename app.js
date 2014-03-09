@@ -30,8 +30,8 @@ app.post('/inbound', twilio.webhook(), function(request, response) {
 
     // Set a location
     var locations = { 
-        'Vancouver' :  '7782324787', 
-        'Montreal'  :  '7789286450',
+        'Vancouver' :  '18886853530', 
+        'Calgary'   :  '18552667030',
     }
 
     // If it's a weekday
@@ -42,7 +42,7 @@ app.post('/inbound', twilio.webhook(), function(request, response) {
         m.zone("-08:00");
         // If it's between 5am and 8am in Vancouver then call Montreal, otherwise call Vancouver
         if(m.hour() >= 5 && m.hour() <= 8) {
-            location = 'Montreal';
+            location = 'Calgary';
         } else {
             location = 'Vancouver';
         }
