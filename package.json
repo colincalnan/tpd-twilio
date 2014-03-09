@@ -1,0 +1,27 @@
+{
+  "name": "tpd",
+  "version": "0.0.1",
+  "description": "Call flows for TPD example",
+  "main": "app.js",
+  "dependencies": {
+    "express": "~3.5.0",
+    "twilio": "~1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/colincalnan/tpd-twilio.git"
+  },
+  "keywords": [
+    "Twilio"
+  ],
+  "author": "Colin Calnan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colincalnan/tpd-twilio/issues"
+  },
+  "homepage": "https://github.com/colincalnan/tpd-twilio"
+}
