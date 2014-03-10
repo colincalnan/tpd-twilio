@@ -1,5 +1,4 @@
 var twilio = require('twilio'),
-    //config = require('./config'),
     express = require('express'),
     routes = require('./routes'),
     user = require('./routes/user'),
@@ -31,7 +30,6 @@ app.use(express.urlencoded());
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-// process.env.TWILIO_ACCOUNT_SID
 // Create a new REST API client to make authenticated requests against the twilio back end
 //var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
 var client = new twilio.RestClient(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_ACCOUNT_KEY);
@@ -60,11 +58,14 @@ app.post('/outbound/sms', function(request, response) {
             console.log('Message sent on:');
             console.log(message.dateCreated);
 
-            response.render('index', { title: 'SMS (Text) Message sent succesffully', success: true });
+            response.render('outboundSMS', { title: 'Send an SMS (text) message', outboundMessage: 'SMS (Text) Message sent successfully'});
 
         } else {
             console.log('Oops! There was an error.');
             console.dir(error);
+
+            response.render('outboundSMS', { title: 'Send an SMS (text) message', outboundMessage: 'There was an Error. SMS (Text) Message was not sent successfully. ' + error.message});
+
         }
     });
 });

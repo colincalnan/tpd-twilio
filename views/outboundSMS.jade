@@ -2,6 +2,8 @@ extends layout
 
 block content
   h1= title
+  div#message
+    p= outboundMessage
   div#contact-area
     form(method='post')
         label(for='name') Name:
