@@ -31,8 +31,10 @@ app.use(express.urlencoded());
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+// process.env.TWILIO_ACCOUNT_SID
 // Create a new REST API client to make authenticated requests against the twilio back end
-var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
+//var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
+var client = new twilio.RestClient(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_ACCOUNT_KEY']);
 
 app.get('/outbound/sms', routes.outboundSMS);
 app.post('/outbound/sms', function(request, response) {
@@ -41,7 +43,7 @@ app.post('/outbound/sms', function(request, response) {
     // REST client will handle authentication and response serialzation for you.
     client.sms.messages.create({
         to:request.body.mobile,
-        from:config.twilio.number,
+        from:ENV['TWILIO_NUMBER'], //config.twilio.number,
         body:request.body.name + ', ' + request.body.message
     }, function(error, message) {
         // The HTTP request to Twilio will run asynchronously. This callback
