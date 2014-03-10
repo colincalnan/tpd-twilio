@@ -1,5 +1,5 @@
 var twilio = require('twilio'),
-    config = require('./config'),
+    //config = require('./config'),
     express = require('express'),
     routes = require('./routes'),
     user = require('./routes/user'),
