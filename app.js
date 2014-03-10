@@ -1,11 +1,71 @@
 var twilio = require('twilio'),
-    express = require('express');
+    config = require('./config'),
+    express = require('express'),
+    routes = require('./routes'),
+    user = require('./routes/user'),
+    http = require('http'),
+    path = require('path');
     
 // Create an express web app
 var app = express();
 
+// all environments
+//app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
+
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+
 // Use middleware to parse incoming form bodies
 app.use(express.urlencoded());
+
+app.get('/', routes.index);
+app.get('/users', user.list);
+
+// Create a new REST API client to make authenticated requests against the twilio back end
+var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
+
+app.get('/outbound/sms', routes.outboundSMS);
+app.post('/outbound/sms', function(request, response) {
+    //console.dir(request.body.name + ', ' + request.body.message);
+    // Pass in parameters to the REST API using an object literal notation. The
+    // REST client will handle authentication and response serialzation for you.
+    client.sms.messages.create({
+        to:request.body.mobile,
+        from:config.twilio.number,
+        body:request.body.name + ', ' + request.body.message
+    }, function(error, message) {
+        // The HTTP request to Twilio will run asynchronously. This callback
+        // function will be called when a response is received from Twilio
+        // The "error" variable will contain error information, if any.
+        // If the request was successful, this value will be "falsy"
+        if (!error) {
+            // The second argument to the callback will contain the information
+            // sent back by Twilio for the request. In this case, it is the
+            // information about the text messsage you just sent:
+            console.log('Success! The SID for this SMS message is:');
+            console.log(message.sid);
+     
+            console.log('Message sent on:');
+            console.log(message.dateCreated);
+
+            response.render('index', { title: 'SMS (Text) Message sent succesffully', success: true });
+
+        } else {
+            console.log('Oops! There was an error.');
+            console.dir(error);
+        }
+    });
+});
 
 // Create a webhook that handles an incoming SMS
 app.post('/sms', twilio.webhook({
@@ -20,7 +80,7 @@ app.post('/sms', twilio.webhook({
 });
 
 // Create a webhook that handles an incoming SMS
-app.post('/inbound', twilio.webhook(), function(request, response) {
+app.post('/inbound', twilio.webhook({validate:false}), function(request, response) {
     // Create a TwiML response
     var twiml = new twilio.TwimlResponse();
 

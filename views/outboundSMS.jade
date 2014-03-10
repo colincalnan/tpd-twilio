@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  div#contact-area
+    form(method='post')
+        label(for='name') Name:
+        input(type='text',name='name',id='name')        
+        label(for='mobile') Mobile:
+        input(type='text',name='mobile',id='mobile')  
+        label(for='message') Message:
+        textarea(name='message', rows=4, id='message' ) Enter your message here
+        
+        input(type='submit',name='submit',value='Submit').submit-button
