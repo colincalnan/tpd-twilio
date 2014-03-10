@@ -104,7 +104,7 @@ app.post('/inbound', twilio.webhook({validate:false}), function(request, respons
         // Set Zone to Vancuver
         m.zone("-08:00");
         // If it's between 5am and 8am in Vancouver then call Montreal, otherwise call Vancouver
-        if(m.hour() >= 5 && m.hour() <= 8) {
+        if(m.hour() >= 5 && m.hour() <= 10) {
             location = 'Calgary';
         } else {
             location = 'Vancouver';
